@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BsPencilSquare } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import Modal from './Modal';
 
 const BillTable = () => {
     const [searchNameValue, setSearchNameValue] = useState("");
@@ -35,18 +36,22 @@ const BillTable = () => {
         );
         setBillData(filtered);
     };
+
+    const deleteBill = (id) =>{
+        console.log(id)
+    }
     return (
         <div className="px-10">
             <div className="flex items-center justify-center gap-x-2 mt-4">
                 <div className="flex items-center gap-x-2 w-full">
                     <span className="font-semibold">FullName:</span>
                     <input
-                    type="search"
-                    placeholder="Search by full name"
-                    className="input input-bordered w-full max-w-xs"
-                    value={searchNameValue}
-                    onChange={handleNameSearch}
-                />
+                        type="search"
+                        placeholder="Search by full name"
+                        className="input input-bordered w-full max-w-xs"
+                        value={searchNameValue}
+                        onChange={handleNameSearch}
+                    />
                 </div>
                 <div className="flex items-center gap-x-2 w-full">
                     <span className="font-semibold">Email:</span>
@@ -68,9 +73,10 @@ const BillTable = () => {
                         onChange={handlePhoneSearch}
                     />
                 </div>
-                <label htmlFor="my-modal" className="btn">Add new</label>
-                
-               
+                <label htmlFor="my-modal-3" className="btn">Add new</label>
+                <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+                <div className="modal"><Modal title="Add New" data="null"/></div>
+
             </div>
             <div className="mt-8 shadow-lg p-3">
                 <div className="overflow-x-auto">
@@ -91,9 +97,12 @@ const BillTable = () => {
                                 <td>Quality Control Specialist</td>
                                 <td>Blue</td>
                                 <td className="flex gap-x-[3px]">
-                                    <button className="btn rounded-md text-[18px] bg-green-400 text-[#fff] border-none"><BsPencilSquare /></button>
-                                    <button className="btn rounded-md text-[18px] bg-red-400 text-[#fff] border-none"><RiDeleteBin6Line/></button>
-                                    </td>
+                                    <label htmlFor="my-modal-2" className="btn rounded-md text-[18px] bg-green-400 text-[#fff] border-none"><BsPencilSquare />
+                                    </label>
+                                    <input type="checkbox" id="my-modal-2" className="modal-toggle" />                                    
+                                <div className="modal"><Modal title="Edit" data="null" /></div>
+                                    <button onClick={() => deleteBill(1)} className="btn rounded-md text-[18px] bg-red-400 text-[#fff] border-none"><RiDeleteBin6Line /></button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
