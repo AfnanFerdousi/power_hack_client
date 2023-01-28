@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import Loader from '../Shared/Loader';
 
 
@@ -33,7 +34,13 @@ const SignUp = () => {
             if (res?.status === 200) {
                 const token = res?.data?.token;
                 localStorage.setItem("token", token)
-                toast("Account Created Successfully")
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Success',
+                    title: 'Account Created Successfully',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
                 navigate('/billingpage')
                 
             }
@@ -45,10 +52,10 @@ const SignUp = () => {
     return (
         <div>
             <div className="hero min-h-screen bg-base-200">
-                <div className="hero-content flex-col lg:flex-row-reverse">
+                <div className="hero-content flex-col lg:flex-row-reverse gap-x-[20px]">
                     <div className="text-center lg:text-left">
                         <h1 className="text-5xl font-bold">Sign Up</h1>
-                       <div className="py-6 font-medium text-[#333]"><span>Signup to access the dashboard \^o^/.</span> <span>Already have an account?</span><a className="ml-2 font-semibold text-blue-400" href="/login">Login</a> </div>
+                       <div className="py-6 font-medium text-[#333]"><span>Signup to access the dashboard.</span> <span>Already have an account?</span><a className="ml-2 font-semibold text-blue-400" href="/login">Login</a> </div>
                     </div>
                     <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                         <div className="card-body">
