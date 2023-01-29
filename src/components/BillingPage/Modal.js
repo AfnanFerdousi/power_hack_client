@@ -4,13 +4,17 @@ import { useForm } from "react-hook-form";
 import { BillingContext } from '../../BillingContextProvider/BillingContextProvider';
 import Swal from 'sweetalert2';
 
-const Modal = ({ title, data, id }) => {
+const Modal = ({ title, data, setSelectedBill, id }) => {
+    console.log(data)
     const {
         register,
         handleSubmit,
         watch,
         formState: { errors } } = useForm();
     const date = new Date()
+    const handleClose = () => {
+            setSelectedBill(null);
+    };
     const { billingData, setBillingData } = useContext(BillingContext);
     const token = localStorage.getItem('token');
     const onSubmit = async (e) => {
@@ -28,7 +32,7 @@ const Modal = ({ title, data, id }) => {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                if(response?.status === 200){
+                if (response?.status === 200) {
                     Swal.fire({
                         icon: 'success',
                         text: 'Success',
@@ -48,36 +52,41 @@ const Modal = ({ title, data, id }) => {
 
         }
     }
+ 
     return (
         <div>
             < div className="bg-[#fff] p-6 rounded-md w-full relative">
-                <label htmlFor={id} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                {id ? <label htmlFor={id} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label> : <label onClick={handleClose} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>}
                 <h3 className="text-xl font-bold mb-4">{title}</h3>
                 <form className="flex flex-col" onClick={handleSubmit(onSubmit)}>
                     <input
                         type="email"
                         placeholder="Full Name"
                         className="input input-bordered w-96  mb-2"
+                    defaultValue={data === null ? '' : data?.fullname}                    
                         {...register("fullname", { required: true })} />
                     {errors.fullname?.type === 'required' && <p className="text-red-500 text-start" role="alert"> Full name is required</p>}
                     <input
                         type="email"
                         placeholder="Email"
+                        defaultValue={data === null ? '' : data?.email}    
                         className="input input-bordered w-96  mb-2"
                         {...register("email", { required: true })} />
                     {errors.email?.type === 'required' && <p className="text-red-500 text-start" role="alert">Email is required</p>}
                     <input
                         type="tel"
                         placeholder="Phone"
+                        defaultValue={data === null ? '' : data?.phone}    
                         className="input input-bordered w-96  mb-2"
                         {...register("phone", { required: true, minLength: 11, maxLength: 11 })} />
                     {errors.phone?.type === 'required' ?
                         <p className="text-red-500 text-start" role="alert">Phone is required</p>
                         : errors.phone?.type === 'maxLength' && <p className="text-red-500 text-start" role="alert">Minimum Length is 11</p>
-                         }
+                    }
                     <input
                         type="number"
                         placeholder="Payable amount"
+                        defaultValue={data === null ? '' : data?.payable}    
                         className="input input-bordered w-96  mb-2"
                         {...register("payable", { required: true })} />
                     {errors.payable?.type === 'required' && <p className="text-red-500 text-start" role="alert"> Payable amount is required</p>}
