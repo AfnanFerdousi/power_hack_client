@@ -5,16 +5,23 @@ export const BillingContext = createContext();
 
 export const BillingContextProvider = (props) => {
     const [billingData, setBillingData] = useState([]);
+    const [loading, setLoading] = useState()
     useEffect(() => {
+        setLoading(true)
         async function fetchBillingData() {
             try {
-                const response = await axios.get('/api/billing-list', {
+                const response = await axios.get('http://localhost:5000/api/billing-list', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
-                setBillingData(response.data);
+                if (response?.status === 200) {
+                    setLoading(false)                    
+                    setBillingData(response.data);
+                }
+                console.log(response)
             } catch (error) {
+                setLoading(false) 
                 console.error(error);
             }
         }
@@ -22,7 +29,7 @@ export const BillingContextProvider = (props) => {
     }, []);
 
     return (
-        <BillingContext.Provider value={{ billingData, setBillingData }}>
+        <BillingContext.Provider value={{ billingData, setBillingData, loading }}>
             {props.children}
         </BillingContext.Provider>
     );

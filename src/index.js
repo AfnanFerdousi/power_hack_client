@@ -1,35 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import SignUp from "./components/Authentication/SignUp";
-import Login from "./components/Authentication/Login";
-import BillingPage from "./components/BillingPage/BillingPage";
+
+import { BillingContextProvider } from "./BillingContextProvider/BillingContextProvider";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <SignUp/>,
-  },
-  {
-    path: "/login",
-    element: <Login/>,
-  },
-  {
-    path: "/billingpage",
-    element: <BillingPage/>,
-  },
-]);
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <BillingContextProvider>
+      <App/>
+   </BillingContextProvider>
   </React.StrictMode>
 );
 

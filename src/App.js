@@ -1,15 +1,29 @@
 import './App.css';
-import { BillingContextProvider } from './BillingContextProvider/BillingContextProvider';
-import BillTable from './components/BillingPage/BillTable';
-import Modal from './components/BillingPage/Modal';
-
+import SignUp from "./components/Authentication/SignUp";
+import Login from "./components/Authentication/Login";
+import BillingPage from "./components/BillingPage/BillingPage";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 function App() {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <SignUp />,
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/billingpage",
+      element: <BillingPage />,
+    },
+  ]);
   return (
     <div className="">
-     <BillingContextProvider>
-      <BillTable/>
-      <Modal/>
-     </BillingContextProvider>
+     <RouterProvider router={router} />
     </div>
   );
 }

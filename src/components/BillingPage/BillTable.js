@@ -3,12 +3,14 @@ import { BsPencilSquare } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { BillingContext } from '../../BillingContextProvider/BillingContextProvider';
 import Modal from './Modal';
+import Loader from '../Shared/Loader';
 
 const BillTable = () => {
-    const { billingData, setBillingData  } = useContext(BillingContext);
+    const { billingData, setBillingData, loading } = useContext(BillingContext);
     const [searchNameValue, setSearchNameValue] = useState("");
     const [searchEmailValue, setSearchEmailValue] = useState("");
     const [searchPhoneValue, setSearchPhoneValue] = useState("");
+    console.log(billingData);
 
     const handleNameSearch = (event) => {
         if (event?.target?.value !== " ") {
@@ -17,7 +19,7 @@ const BillTable = () => {
         const filtered = billingData.filter((bill) =>
             bill.fullname.toLowerCase().includes(event.target.value.toLowerCase())
         );
-        setBillingData (filtered);
+        setBillingData(filtered);
     };
     const handleEmailSearch = (event) => {
         if (event?.target?.value !== " ") {
@@ -26,7 +28,7 @@ const BillTable = () => {
         const filtered = billingData.filter((bill) =>
             bill.email.toLowerCase().includes(event.target.value.toLowerCase())
         );
-        setBillingData (filtered);
+        setBillingData(filtered);
     };
     const handlePhoneSearch = (event) => {
         if (event?.target?.value !== " ") {
@@ -35,12 +37,18 @@ const BillTable = () => {
         const filtered = billingData.filter((bill) =>
             bill.phone.includes(event.target.value)
         );
-        setBillingData (filtered);
+        setBillingData(filtered);
     };
 
-    const deleteBill = (id) =>{
+    const deleteBill = (id) => {
         console.log(id)
     }
+
+    const sortedBills = billingData.sort((a, b) => {
+  const dateA = new Date(a.date);
+  const dateB = new Date(b.date);
+  return dateB - dateA;
+});
     return (
         <div className="px-10">
             <div className="flex items-center justify-center gap-x-2 mt-4">
@@ -76,7 +84,7 @@ const BillTable = () => {
                 </div>
                 <label htmlFor="my-modal-3" className="btn">Add new</label>
                 <input type="checkbox" id="my-modal-3" className="modal-toggle" />
-                <div className="modal"><Modal title="Add New" id="my-modal-3" data="null"/></div>
+                <div className="modal"><Modal title="Add" id="my-modal-3" data="null" /></div>
 
             </div>
             <div className="mt-8 shadow-lg p-3">
@@ -88,23 +96,30 @@ const BillTable = () => {
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Paid Amount</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th>1</th>
-                                <td>Cy Ganderton</td>
-                                <td>Quality Control Specialist</td>
-                                <td>Blue</td>
-                                <td className="flex gap-x-[3px]">
-                                    <label htmlFor="my-modal-4" className="btn rounded-md text-[18px] bg-green-400 text-[#fff] border-none"><BsPencilSquare />
-                                    </label>
-                                    <input type="checkbox" id="my-modal-4" className="modal-toggle" />                                    
-                                <div className="modal"><Modal title="Edit" id="my-modal-4" data="null" /></div>
-                                    <button onClick={() => deleteBill(1)} className="btn rounded-md text-[18px] bg-red-400 text-[#fff] border-none"><RiDeleteBin6Line /></button>
-                                </td>
-                            </tr>
+                            {Array.isArray(sortedBills) && sortedBills?.map((single) => {
+                                return (
+                                    <tr>
+                                        <th>{loading ? <Loader/> : single?.billingID}</th>
+                                        <td>{single?.fullname}</td>
+                                        <td>{single?.email}</td>
+                                        <td>{single?.phone}</td>
+                                        <td>${single?.payable}</td>
+                                        <td className="flex gap-x-[3px]">
+                                            <label htmlFor="my-modal-4" className="btn rounded-md text-[18px] bg-green-400 text-[#fff] border-none"><BsPencilSquare />
+                                            </label>
+                                            <input type="checkbox" id="my-modal-4" className="modal-toggle" />
+                                            <div className="modal"><Modal title="Edit" id="my-modal-4" data="null" /></div>
+                                            <button onClick={() => deleteBill(single?.billingID)} className="btn rounded-md text-[18px] bg-red-400 text-[#fff] border-none"><RiDeleteBin6Line /></button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+
                         </tbody>
                     </table>
                 </div>
