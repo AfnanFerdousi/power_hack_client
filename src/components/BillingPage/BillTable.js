@@ -5,9 +5,11 @@ import { BillingContext } from '../../BillingContextProvider/BillingContextProvi
 import Modal from './Modal';
 import Loader from '../Shared/Loader';
 import Pagination from '../Shared/Pagination';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const BillTable = () => {
-    const { billingData, setBillingData, loading, currentPage, totalPages,handlePageChange } = useContext(BillingContext);
+    const { billingData, setBillingData, loading, currentPage, totalPages, handlePageChange } = useContext(BillingContext);
     const [searchNameValue, setSearchNameValue] = useState("");
     const [searchEmailValue, setSearchEmailValue] = useState("");
     const [searchPhoneValue, setSearchPhoneValue] = useState("");
@@ -40,20 +42,45 @@ const BillTable = () => {
         );
         setBillingData(filtered);
     };
-
+    const token = localStorage.getItem('token');
     const deleteBill = (id) => {
         console.log(id)
+        axios.delete(`http://localhost:5000/api/delete-billing/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                // Handle success
+                if(response?.status === 200){
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'Success',
+                        title: 'Bill Edited',
+                        showConfirmButton: false,
+                        timer: 500
+                    });
+                    const updatedBillingData = billingData.filter(bill => bill._id !== id);
+                    setBillingData(updatedBillingData);
+                }
+                console.log(response.data);
+            })
+            .catch(error => {
+                // Handle error
+                console.error(error);
+            });
     }
+
     const [selectedBill, setSelectedBill] = useState(null)
     const handleEditClick = bill => {
         setSelectedBill(bill);
     };
-const sortedBills = billingData &&  billingData.sort((a, b) => {
-  const dateA = new Date(a.date);
-  const dateB = new Date(b.date);
-  return dateB - dateA;
-        
-});
+    const sortedBills = billingData && billingData.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateB - dateA;
+
+    });
     return (
         <div className="px-10">
             <div className="flex items-center justify-center gap-x-2 mt-4">
@@ -87,7 +114,7 @@ const sortedBills = billingData &&  billingData.sort((a, b) => {
                         onChange={handlePhoneSearch}
                     />
                 </div>
-                <label  htmlFor="my-modal-3" className="btn">Add new</label>
+                <label htmlFor="my-modal-3" className="btn">Add new</label>
                 <input type="checkbox" id="my-modal-3" className="modal-toggle" />
                 <div className="modal"><Modal title="Add" id="my-modal-3" data={null} setSelectedBill={setSelectedBill} /></div>
 
@@ -109,7 +136,7 @@ const sortedBills = billingData &&  billingData.sort((a, b) => {
                             {Array.isArray(sortedBills) && sortedBills?.map((single) => {
                                 return (
                                     <tr key={single?.billingID}>
-                                        <th>{loading ? <Loader/> : single?.billingID}</th>
+                                        <th>{loading ? <Loader /> : single?.billingID}</th>
                                         <td>{single?.fullname}</td>
                                         <td>{single?.email}</td>
                                         <td>{single?.phone}</td>
@@ -121,8 +148,7 @@ const sortedBills = billingData &&  billingData.sort((a, b) => {
                                             {selectedBill && (
                                                 <div className="modal"><Modal title="Edit" data={selectedBill} setSelectedBill={setSelectedBill} /></div>
                                             )}
-                                            {/* <div className="modal"><Modal title="Edit" id="my-modal-4" data={single} /></div> */}
-                                            <button onClick={() => deleteBill(single?.billingID)} className="btn rounded-md text-[18px] bg-red-400 text-[#fff] border-none"><RiDeleteBin6Line /></button>
+                                            <button onClick={() => deleteBill(single?._id)} className="btn rounded-md text-[18px] bg-red-400 text-[#fff] border-none"><RiDeleteBin6Line /></button>
                                         </td>
                                     </tr>
                                 )

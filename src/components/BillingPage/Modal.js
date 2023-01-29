@@ -3,19 +3,19 @@ import React, { useState, useContext } from 'react';
 import { useForm } from "react-hook-form";
 import { BillingContext } from '../../BillingContextProvider/BillingContextProvider';
 import Swal from 'sweetalert2';
+import Loader from '../Shared/Loader'
 
 const Modal = ({ title, data, setSelectedBill, id }) => {
-    console.log(data)
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors } } = useForm();
-    const date = new Date()
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const date = new Date();
     const handleClose = () => {
-            setSelectedBill(null);
+        setSelectedBill(null);
     };
-    const { billingData, setBillingData } = useContext(BillingContext);
+    const { billingData, setBillingData, loading } = useContext(BillingContext);
+    if (loading) {
+        return <Loader />;
+    }
+
     const token = localStorage.getItem('token');
     const onSubmit = async (e) => {
         if (title === "Add") {
@@ -25,7 +25,7 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
                 phone: e?.phone,
                 payable: e?.payable,
                 date
-            }
+            };
             try {
                 const response = await axios.post('http://localhost:5000/api/add-billing', billData, {
                     headers: {
@@ -39,20 +39,45 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
                         title: 'Bill Added',
                         showConfirmButton: false,
                         timer: 500
-                    })
-                    setBillingData([...billingData, response?.data?.billData])
+                    });
+                    setBillingData([...billingData, response?.data?.billData]);
                 }
-                console.log(response);
             } catch (err) {
-                console.log(err)
-
+                console.error(err);
             }
-
         } else if (title === "Edit") {
-
+            const editData = {
+                billingID: data?.billingID,
+                fullname: e?.fullname,
+                email: e?.email,
+                payable: e?.payable,
+                phone: e?.phone,
+                date
+            };
+            try {
+                const response = await axios.put(`http://localhost:5000/api/update-billing/${data?._id}`, editData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response?.status === 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'Success',
+                        title: 'Bill Edited',
+                        showConfirmButton: false,
+                        timer: 500
+                    });
+                    // handleClose();
+                    const updatedData = billingData.map(item => item._id === data._id ? response?.data?.updatedData : item);
+                    setBillingData(updatedData);
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
-    }
- 
+    };
     return (
         <div>
             < div className="bg-[#fff] p-6 rounded-md w-full relative">
