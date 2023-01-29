@@ -1,10 +1,15 @@
 import './App.css';
-import SignUp from './components/Authentication/SignUp';
+import { BillingContextProvider } from './BillingContextProvider/BillingContextProvider';
+import BillTable from './components/BillingPage/BillTable';
+import Modal from './components/BillingPage/Modal';
 
 function App() {
   return (
     <div className="">
-      <SignUp/>
+     <BillingContextProvider>
+      <BillTable/>
+      <Modal/>
+     </BillingContextProvider>
     </div>
   );
 }

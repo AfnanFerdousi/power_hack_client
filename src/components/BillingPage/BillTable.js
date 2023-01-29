@@ -1,40 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { BsPencilSquare } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { BillingContext } from '../../BillingContextProvider/BillingContextProvider';
 import Modal from './Modal';
 
 const BillTable = () => {
+    const { billingData, setBillingData  } = useContext(BillingContext);
     const [searchNameValue, setSearchNameValue] = useState("");
     const [searchEmailValue, setSearchEmailValue] = useState("");
     const [searchPhoneValue, setSearchPhoneValue] = useState("");
-    const [billData, setBillData] = useState([])
 
     const handleNameSearch = (event) => {
         if (event?.target?.value !== " ") {
             setSearchNameValue(event.target.value);
         }
-        const filtered = billData.filter((bill) =>
+        const filtered = billingData.filter((bill) =>
             bill.fullname.toLowerCase().includes(event.target.value.toLowerCase())
         );
-        setBillData(filtered);
+        setBillingData (filtered);
     };
     const handleEmailSearch = (event) => {
         if (event?.target?.value !== " ") {
             setSearchEmailValue(event.target.value);
         }
-        const filtered = billData.filter((bill) =>
+        const filtered = billingData.filter((bill) =>
             bill.email.toLowerCase().includes(event.target.value.toLowerCase())
         );
-        setBillData(filtered);
+        setBillingData (filtered);
     };
     const handlePhoneSearch = (event) => {
         if (event?.target?.value !== " ") {
             setSearchPhoneValue(event.target.value);
         }
-        const filtered = billData.filter((bill) =>
+        const filtered = billingData.filter((bill) =>
             bill.phone.includes(event.target.value)
         );
-        setBillData(filtered);
+        setBillingData (filtered);
     };
 
     const deleteBill = (id) =>{
@@ -75,7 +76,7 @@ const BillTable = () => {
                 </div>
                 <label htmlFor="my-modal-3" className="btn">Add new</label>
                 <input type="checkbox" id="my-modal-3" className="modal-toggle" />
-                <div className="modal"><Modal title="Add New" data="null"/></div>
+                <div className="modal"><Modal title="Add New" id="my-modal-3" data="null"/></div>
 
             </div>
             <div className="mt-8 shadow-lg p-3">
@@ -97,10 +98,10 @@ const BillTable = () => {
                                 <td>Quality Control Specialist</td>
                                 <td>Blue</td>
                                 <td className="flex gap-x-[3px]">
-                                    <label htmlFor="my-modal-2" className="btn rounded-md text-[18px] bg-green-400 text-[#fff] border-none"><BsPencilSquare />
+                                    <label htmlFor="my-modal-4" className="btn rounded-md text-[18px] bg-green-400 text-[#fff] border-none"><BsPencilSquare />
                                     </label>
-                                    <input type="checkbox" id="my-modal-2" className="modal-toggle" />                                    
-                                <div className="modal"><Modal title="Edit" data="null" /></div>
+                                    <input type="checkbox" id="my-modal-4" className="modal-toggle" />                                    
+                                <div className="modal"><Modal title="Edit" id="my-modal-4" data="null" /></div>
                                     <button onClick={() => deleteBill(1)} className="btn rounded-md text-[18px] bg-red-400 text-[#fff] border-none"><RiDeleteBin6Line /></button>
                                 </td>
                             </tr>
