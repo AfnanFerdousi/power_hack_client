@@ -44,7 +44,7 @@ const SignUp = () => {
                     showConfirmButton: false,
                     timer: 1500
                 })
-                navigate('/billingpage')
+                window.location.href = '/billingpage'
 
             }
         } catch (err) {
