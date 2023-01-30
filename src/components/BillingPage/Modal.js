@@ -17,6 +17,7 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
     }
 
     const token = localStorage.getItem('token');
+    
     const onSubmit = async (e) => {
         if (title === "Add") {
             const billData = {
@@ -45,22 +46,29 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
             } catch (err) {
                 console.error(err);
             }
-        } else if (title === "Edit") {
+        }         
+    };
+    console.log(data)
+    const onEdit = async(event) => {
+        // event.preventDefault();
+        if (title === "Edit") {
             const editData = {
+                _id: data?._id,
                 billingID: data?.billingID,
-                fullname: e?.fullname,
-                email: e?.email,
-                payable: e?.payable,
-                phone: e?.phone,
+                fullname: event?.fullname,
+                email: event?.email,
+                payable: event?.payable,
+                phone: event?.phone,
                 date
             };
             try {
-                const response = await axios.put(`http://localhost:5000/api/update-billing/${data?._id}`, editData, {
+                const response = await axios.put(`http://localhost:5000/api/update-billing/${data?.billingID}`, editData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                 });
+                console.log(data)
                 if (response?.status === 200) {
                     Swal.fire({
                         icon: 'success',
@@ -69,23 +77,30 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
                         showConfirmButton: false,
                         timer: 500
                     });
-                    // handleClose();
+                    handleClose();
                     const updatedData = billingData.map(item => item._id === data._id ? response?.data?.updatedData : item);
                     setBillingData(updatedData);
                 }
             } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Error',
+                    title: error?.response.data?.message,
+                    showConfirmButton: false,
+                    timer: 500
+                });
                 console.error(error);
             }
         }
-    };
+    }
     return (
         <div>
             < div className="bg-[#fff] p-6 rounded-md w-full relative">
                 {id ? <label htmlFor={id} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label> : <label onClick={handleClose} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>}
                 <h3 className="text-xl font-bold mb-4">{title}</h3>
-                <form className="flex flex-col" onClick={handleSubmit(onSubmit)}>
+                <form className="flex flex-col" onSubmit={handleSubmit(title === "Add" ? onSubmit : onEdit)}>
                     <input
-                        type="email"
+                        type="name"
                         placeholder="Full Name"
                         className="input input-bordered w-96  mb-2"
                     defaultValue={data === null ? '' : data?.fullname}                    

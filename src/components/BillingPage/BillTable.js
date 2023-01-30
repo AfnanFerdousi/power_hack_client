@@ -9,39 +9,49 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 
 const BillTable = () => {
-    const { billingData, setBillingData, loading, currentPage, totalPages, handlePageChange } = useContext(BillingContext);
-    const [searchNameValue, setSearchNameValue] = useState("");
-    const [searchEmailValue, setSearchEmailValue] = useState("");
-    const [searchPhoneValue, setSearchPhoneValue] = useState("");
-    console.log(billingData);
+    const { billingData, setBillingData, loading, currentPage, totalPages, handlePageChange, searchNameValue, searchEmailValue, searchPhoneValue, handleEmailSearch, handleNameSearch, handlePhoneSearch } = useContext(BillingContext);
+    // const [searchNameValue, setSearchNameValue] = useState("");
+    // const [searchEmailValue, setSearchEmailValue] = useState("");
+    // const [searchPhoneValue, setSearchPhoneValue] = useState("");
+    // console.log(billingData);
 
-    const handleNameSearch = (event) => {
-        if (event?.target?.value !== " ") {
-            setSearchNameValue(event.target.value);
-        }
-        const filtered = billingData.filter((bill) =>
-            bill.fullname.toLowerCase().includes(event.target.value.toLowerCase())
-        );
-        setBillingData(filtered);
-    };
-    const handleEmailSearch = (event) => {
-        if (event?.target?.value !== " ") {
-            setSearchEmailValue(event.target.value);
-        }
-        const filtered = billingData.filter((bill) =>
-            bill.email.toLowerCase().includes(event.target.value.toLowerCase())
-        );
-        setBillingData(filtered);
-    };
-    const handlePhoneSearch = (event) => {
-        if (event?.target?.value !== " ") {
-            setSearchPhoneValue(event.target.value);
-        }
-        const filtered = billingData.filter((bill) =>
-            bill.phone.includes(event.target.value)
-        );
-        setBillingData(filtered);
-    };
+    // const handleNameSearch = (event) => {
+    //     setSearchNameValue(event.target.value);
+    //     if (event.target.value === "") {            
+    //         setBillingData(billingData); 
+    //     } 
+    //     else if (event?.target?.value !== "") {            
+    //         setSearchNameValue(event.target.value);
+    //         const filtered = billingData.filter((bill) =>
+    //             bill.fullname.toLowerCase().includes(event.target.value.toLowerCase())
+    //         );
+    //         setBillingData(filtered);
+    //     } 
+    // };
+    // const handleEmailSearch = (event) => {
+    //     if (event.target.value === " ") {
+    //         setBillingData(billingData);
+    //     } 
+    //     else if (event?.target?.value !== " ") {
+    //         setSearchEmailValue(event.target.value);
+    //         const filtered = billingData.filter((bill) =>
+    //             bill.email.toLowerCase().includes(event.target.value.toLowerCase())
+    //         );
+    //         setBillingData(filtered);
+    //     }
+    // };
+    // const handlePhoneSearch = (event) => {
+    //     if (event.target.value === " ") {
+    //         setBillingData(billingData);
+    //     } 
+    //     else if (event?.target?.value !== " ") {
+    //         setSearchPhoneValue(event.target.value);
+    //         const filtered = billingData.filter((bill) =>
+    //             bill.phone.includes(event.target.value)
+    //         );
+    //         setBillingData(filtered);
+    //     }
+    // };
     const token = localStorage.getItem('token');
     const deleteBill = (id) => {
         console.log(id)
@@ -72,7 +82,7 @@ const BillTable = () => {
     }
 
     const [selectedBill, setSelectedBill] = useState(null)
-    const handleEditClick = bill => {
+    const handleEditClick = (bill) => {
         setSelectedBill(bill);
     };
     const sortedBills = billingData && billingData.sort((a, b) => {
@@ -87,8 +97,8 @@ const BillTable = () => {
                 <div className="flex items-center gap-x-2 w-full">
                     <span className="font-semibold">FullName:</span>
                     <input
-                        type="search"
-                        placeholder="Search by full name"
+                        type="text"
+                        placeholder="Search by full name"                        
                         className="input input-bordered w-full max-w-xs"
                         value={searchNameValue}
                         onChange={handleNameSearch}
@@ -97,7 +107,7 @@ const BillTable = () => {
                 <div className="flex items-center gap-x-2 w-full">
                     <span className="font-semibold">Email:</span>
                     <input
-                        type="search"
+                        type="text"
                         placeholder="Search by email"
                         className="input input-bordered w-full max-w-xs"
                         value={searchEmailValue}
@@ -107,7 +117,7 @@ const BillTable = () => {
                 <div className="flex items-center gap-x-2 w-full">
                     <span className="font-semibold">Phone:</span>
                     <input
-                        type="search"
+                        type="text"
                         placeholder="Search by phone number"
                         className="input input-bordered w-full max-w-xs"
                         value={searchPhoneValue}
@@ -146,7 +156,7 @@ const BillTable = () => {
                                             </label>
                                             <input type="checkbox" id="my-modal-4" className="modal-toggle" />
                                             {selectedBill && (
-                                                <div className="modal"><Modal title="Edit" data={selectedBill} setSelectedBill={setSelectedBill} /></div>
+                                                <div className="modal"><Modal title="Edit" data={selectedBill} _id={single?._id} setSelectedBill={setSelectedBill} /></div>
                                             )}
                                             <button onClick={() => deleteBill(single?._id)} className="btn rounded-md text-[18px] bg-red-400 text-[#fff] border-none"><RiDeleteBin6Line /></button>
                                         </td>

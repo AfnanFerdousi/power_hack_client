@@ -8,6 +8,50 @@ export const BillingContextProvider = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
+
+    const [searchNameValue, setSearchNameValue] = useState("");
+    const [searchEmailValue, setSearchEmailValue] = useState("");
+    const [searchPhoneValue, setSearchPhoneValue] = useState("");
+    console.log(billingData);
+
+    const handleNameSearch = (event) => {
+        setSearchNameValue(event.target.value);
+        if (event.target.value === "") {
+            setBillingData(billingData);
+        }
+        else if (event?.target?.value !== "") {
+            setSearchNameValue(event.target.value);
+            const filtered = billingData.filter((bill) =>
+                bill.fullname.toLowerCase().includes(event.target.value.toLowerCase())
+            );
+            setBillingData(filtered);
+        }
+    };
+    const handleEmailSearch = (event) => {
+        if (event.target.value === " ") {
+            setBillingData(billingData);
+        }
+        else if (event?.target?.value !== " ") {
+            setSearchEmailValue(event.target.value);
+            const filtered = billingData.filter((bill) =>
+                bill.email.toLowerCase().includes(event.target.value.toLowerCase())
+            );
+            setBillingData(filtered);
+        }
+    };
+    const handlePhoneSearch = (event) => {
+        if (event.target.value === " ") {
+            setBillingData(billingData);
+        }
+        else if (event?.target?.value !== " ") {
+            setSearchPhoneValue(event.target.value);
+            const filtered = billingData.filter((bill) =>
+                bill.phone.includes(event.target.value)
+            );
+            setBillingData(filtered);
+        }
+    };
+
     async function fetchBillingData(page) {
         try {
             setLoading(true);
@@ -35,7 +79,7 @@ export const BillingContextProvider = (props) => {
     };
 
     return (
-        <BillingContext.Provider value={{ billingData, setBillingData, loading, totalPages, currentPage, handlePageChange }}>
+        <BillingContext.Provider value={{ billingData, setBillingData, loading, totalPages, currentPage, handlePageChange, handleNameSearch, handlePhoneSearch, handleEmailSearch }}>
             {props.children}
         </BillingContext.Provider>
     );
