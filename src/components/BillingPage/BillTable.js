@@ -10,59 +10,19 @@ import axios from 'axios';
 
 const BillTable = () => {
     const { billingData, setBillingData, loading, currentPage, totalPages, handlePageChange, searchNameValue, searchEmailValue, searchPhoneValue, handleEmailSearch, handleNameSearch, handlePhoneSearch } = useContext(BillingContext);
-    // const [searchNameValue, setSearchNameValue] = useState("");
-    // const [searchEmailValue, setSearchEmailValue] = useState("");
-    // const [searchPhoneValue, setSearchPhoneValue] = useState("");
-    // console.log(billingData);
-
-    // const handleNameSearch = (event) => {
-    //     setSearchNameValue(event.target.value);
-    //     if (event.target.value === "") {            
-    //         setBillingData(billingData); 
-    //     } 
-    //     else if (event?.target?.value !== "") {            
-    //         setSearchNameValue(event.target.value);
-    //         const filtered = billingData.filter((bill) =>
-    //             bill.fullname.toLowerCase().includes(event.target.value.toLowerCase())
-    //         );
-    //         setBillingData(filtered);
-    //     } 
-    // };
-    // const handleEmailSearch = (event) => {
-    //     if (event.target.value === " ") {
-    //         setBillingData(billingData);
-    //     } 
-    //     else if (event?.target?.value !== " ") {
-    //         setSearchEmailValue(event.target.value);
-    //         const filtered = billingData.filter((bill) =>
-    //             bill.email.toLowerCase().includes(event.target.value.toLowerCase())
-    //         );
-    //         setBillingData(filtered);
-    //     }
-    // };
-    // const handlePhoneSearch = (event) => {
-    //     if (event.target.value === " ") {
-    //         setBillingData(billingData);
-    //     } 
-    //     else if (event?.target?.value !== " ") {
-    //         setSearchPhoneValue(event.target.value);
-    //         const filtered = billingData.filter((bill) =>
-    //             bill.phone.includes(event.target.value)
-    //         );
-    //         setBillingData(filtered);
-    //     }
-    // };
     const token = localStorage.getItem('token');
+    const [loading2, setLoading2] = useState()
     const deleteBill = (id) => {
-        console.log(id)
-        axios.delete(`http://localhost:5000/api/delete-billing/${id}`, {
+        // console.log(id)
+        setLoading2(true)
+        axios.delete(`https://powerhackerserver.onrender.com/api/delete-billing/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then(response => {
                 // Handle success
-                if(response?.status === 200){
+                if (response?.status === 200) {
                     Swal.fire({
                         icon: 'success',
                         text: 'Success',
@@ -70,13 +30,15 @@ const BillTable = () => {
                         showConfirmButton: false,
                         timer: 500
                     });
+                    setLoading2(false)
                     const updatedBillingData = billingData.filter(bill => bill._id !== id);
                     setBillingData(updatedBillingData);
                 }
-                console.log(response.data);
+                // console.log(response.data);
             })
             .catch(error => {
                 // Handle error
+                setLoading2(false)
                 console.error(error);
             });
     }
@@ -91,8 +53,8 @@ const BillTable = () => {
         return dateB - dateA;
 
     });
-    if(loading){
-        return <Loader/>
+    if (loading || loading2) {
+        return <Loader />
     }
     return (
         <div className="px-10">
@@ -101,7 +63,7 @@ const BillTable = () => {
                     <span className="font-semibold">FullName:</span>
                     <input
                         type="text"
-                        placeholder="Search by full name"                        
+                        placeholder="Search by full name"
                         className="input input-bordered w-full max-w-xs"
                         value={searchNameValue}
                         onChange={handleNameSearch}

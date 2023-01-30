@@ -17,7 +17,7 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
     }
 
     const token = localStorage.getItem('token');
-    
+
     const onSubmit = async (e) => {
         if (title === "Add") {
             const billData = {
@@ -28,7 +28,7 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
                 date
             };
             try {
-                const response = await axios.post('http://localhost:5000/api/add-billing', billData, {
+                const response = await axios.post('https://powerhackerserver.onrender.com/api/add-billing', billData, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -41,15 +41,16 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
                         showConfirmButton: false,
                         timer: 500
                     });
+                    handleClose();
                     setBillingData([...billingData, response?.data?.billData]);
                 }
             } catch (err) {
                 console.error(err);
             }
-        }         
+        }
     };
-    console.log(data)
-    const onEdit = async(event) => {
+    // console.log(data)
+    const onEdit = async (event) => {
         // event.preventDefault();
         if (title === "Edit") {
             const editData = {
@@ -62,13 +63,13 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
                 date
             };
             try {
-                const response = await axios.put(`http://localhost:5000/api/update-billing/${data?.billingID}`, editData, {
+                const response = await axios.put(`https://powerhackerserver.onrender.com/api/update-billing/${data?.billingID}`, editData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                 });
-                console.log(data)
+                // console.log(data)
                 if (response?.status === 200) {
                     Swal.fire({
                         icon: 'success',
@@ -103,31 +104,31 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
                         type="name"
                         placeholder="Full Name"
                         className="input input-bordered w-96  mb-2"
-                    defaultValue={data === null ? '' : data?.fullname}                    
+                        defaultValue={data === null ? '' : data?.fullname}
                         {...register("fullname", { required: true })} />
                     {errors.fullname?.type === 'required' && <p className="text-red-500 text-start" role="alert"> Full name is required</p>}
                     <input
                         type="email"
                         placeholder="Email"
-                        defaultValue={data === null ? '' : data?.email}    
+                        defaultValue={data === null ? '' : data?.email}
                         className="input input-bordered w-96  mb-2"
                         {...register("email", { required: true })} />
                     {errors.email?.type === 'required' && <p className="text-red-500 text-start" role="alert">Email is required</p>}
                     <input
                         type="tel"
                         placeholder="Phone"
-                        defaultValue={data === null ? '' : data?.phone}    
+                        defaultValue={data === null ? '' : data?.phone}
                         className="input input-bordered w-96  mb-2"
-                        {...register("phone", { required: true, minLength: 11, maxLength: 11 })} />
+                        {...register("phone", { required: true, minLength: 11, maxLength: 11 })}
+                    />
                     {errors.phone?.type === 'required' ?
                         <p className="text-red-500 text-start" role="alert">Phone is required</p>
-                        ? errors.phone?.type === 'maxLength' && <p className="text-red-500 text-start" role="alert">Maximum Length is 11</p>
-                        : errors.phone?.type === 'minLength' && <p className="text-red-500 text-start" role="alert">Minimum Length is 11</p>
+                            : errors.phone?.type === 'minLength' && <p className="text-red-500 text-start" role="alert">Minimum Length is 11</p>                            
                     }
                     <input
                         type="number"
                         placeholder="Payable amount"
-                        defaultValue={data === null ? '' : data?.payable}    
+                        defaultValue={data === null ? '' : data?.payable}
                         className="input input-bordered w-96  mb-2"
                         {...register("payable", { required: true })} />
                     {errors.payable?.type === 'required' && <p className="text-red-500 text-start" role="alert"> Payable amount is required</p>}

@@ -13,12 +13,12 @@ const Login = () => {
         watch,
         formState: { errors } } = useForm();
     const navigate = useNavigate()
-    const token = localStorage.getItem("token")
-    if (token) {
-        navigate('/billingpage')
-    }
+    // const token = localStorage.getItem("token")
+    // if (token) {
+    //     navigate('/billingpage')
+    // }
     const onLogin = async (data) => {
-        console.log(data)
+        // console.log(data)
         const user = {
             email: data?.email,
             password: data?.password
@@ -30,7 +30,7 @@ const Login = () => {
                 },
             };
             const body = JSON.stringify(user);
-            const res = await axios.post("http://localhost:5000/api/login", body, config);
+            const res = await axios.post("https://powerhackerserver.onrender.com/api/login", body, config);
             if (res?.status === 200) {
                 const token = res?.data?.token;
                 localStorage.setItem("token", token)
@@ -41,10 +41,10 @@ const Login = () => {
                     showConfirmButton: false,
                     timer: 1500
                 })
-                navigate('/billingpage')
+                window.location.href = '/billingpage'
 
             }
-        } catch (err) { 
+        } catch (err) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

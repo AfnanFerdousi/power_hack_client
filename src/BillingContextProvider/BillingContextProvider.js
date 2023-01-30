@@ -13,8 +13,8 @@ export const BillingContextProvider = (props) => {
     const [searchNameValue, setSearchNameValue] = useState("");
     const [searchEmailValue, setSearchEmailValue] = useState("");
     const [searchPhoneValue, setSearchPhoneValue] = useState("");
-    console.log(billingData);
-
+    // console.log(billingData);
+    // const navigate = useNavigate();
     const handleNameSearch = (event) => {
         setSearchNameValue(event.target.value);
         if (event.target.value === "") {
@@ -56,21 +56,24 @@ export const BillingContextProvider = (props) => {
     async function fetchBillingData(page) {
         try {
             setLoading(true);
-            const response = await axios.get(`http://localhost:5000/api/billing-list/${page}`, {
+            const response = await axios.get(`https://powerhackerserver.onrender.com/api/billing-list/${page}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
             if (response?.status === 200) {
                 setLoading(false);
-                console.log(response)
                 setBillingData(response.data.result);
                 setOriginalBillingData(response.data.result);
                 setTotalPages(response.data.totalPages);
             }
-        } catch (error) {
+            console.log(response)
+        }
+        catch (error) {
             setLoading(false);
-            console.error(error);
+            // if (error?.response?.status === 403) {
+            //     window.location.href = '/login'
+            // }
         }
     }
     useEffect(() => {

@@ -6,7 +6,7 @@ const Navbar = () => {
     const navigate = useNavigate()
     const { billingData } = useContext(BillingContext);
     const totalPaidAmount = billingData.reduce((acc, bill) => Number(acc) + Number(bill.payable), 0);
-    console.log(totalPaidAmount)
+    // console.log(totalPaidAmount)
     const logout = () => {
         localStorage.removeItem('token');
         navigate('/login');
