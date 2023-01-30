@@ -121,7 +121,8 @@ const Modal = ({ title, data, setSelectedBill, id }) => {
                         {...register("phone", { required: true, minLength: 11, maxLength: 11 })} />
                     {errors.phone?.type === 'required' ?
                         <p className="text-red-500 text-start" role="alert">Phone is required</p>
-                        : errors.phone?.type === 'maxLength' && <p className="text-red-500 text-start" role="alert">Minimum Length is 11</p>
+                        ? errors.phone?.type === 'maxLength' && <p className="text-red-500 text-start" role="alert">Maximum Length is 11</p>
+                        : errors.phone?.type === 'minLength' && <p className="text-red-500 text-start" role="alert">Minimum Length is 11</p>
                     }
                     <input
                         type="number"

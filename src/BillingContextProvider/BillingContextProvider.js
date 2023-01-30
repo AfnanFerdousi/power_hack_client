@@ -8,6 +8,7 @@ export const BillingContextProvider = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
+    const [originalBillingData, setOriginalBillingData] = useState([]);
 
     const [searchNameValue, setSearchNameValue] = useState("");
     const [searchEmailValue, setSearchEmailValue] = useState("");
@@ -17,7 +18,7 @@ export const BillingContextProvider = (props) => {
     const handleNameSearch = (event) => {
         setSearchNameValue(event.target.value);
         if (event.target.value === "") {
-            setBillingData(billingData);
+            setBillingData(originalBillingData);
         }
         else if (event?.target?.value !== "") {
             setSearchNameValue(event.target.value);
@@ -29,7 +30,7 @@ export const BillingContextProvider = (props) => {
     };
     const handleEmailSearch = (event) => {
         if (event.target.value === " ") {
-            setBillingData(billingData);
+            setBillingData(originalBillingData);
         }
         else if (event?.target?.value !== " ") {
             setSearchEmailValue(event.target.value);
@@ -41,7 +42,7 @@ export const BillingContextProvider = (props) => {
     };
     const handlePhoneSearch = (event) => {
         if (event.target.value === " ") {
-            setBillingData(billingData);
+            setBillingData(originalBillingData);
         }
         else if (event?.target?.value !== " ") {
             setSearchPhoneValue(event.target.value);
@@ -64,6 +65,7 @@ export const BillingContextProvider = (props) => {
                 setLoading(false);
                 console.log(response)
                 setBillingData(response.data.result);
+                setOriginalBillingData(response.data.result);
                 setTotalPages(response.data.totalPages);
             }
         } catch (error) {

@@ -13,6 +13,10 @@ const Login = () => {
         watch,
         formState: { errors } } = useForm();
     const navigate = useNavigate()
+    const token = localStorage.getItem("token")
+    if (token) {
+        navigate('/billingpage')
+    }
     const onLogin = async (data) => {
         console.log(data)
         const user = {

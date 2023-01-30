@@ -15,7 +15,10 @@ const SignUp = () => {
         formState: { errors } } = useForm();
 
     const navigate = useNavigate();
-
+    const token = localStorage.getItem("token")
+    if (token) {
+        navigate('/billingpage')
+    }
     const onSignUp = async (data) => {
         console.log(data)
         const newUser = {

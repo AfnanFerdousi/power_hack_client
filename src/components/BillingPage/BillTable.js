@@ -91,6 +91,9 @@ const BillTable = () => {
         return dateB - dateA;
 
     });
+    if(loading){
+        return <Loader/>
+    }
     return (
         <div className="px-10">
             <div className="flex items-center justify-center gap-x-2 mt-4">
@@ -143,7 +146,7 @@ const BillTable = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {Array.isArray(sortedBills) && sortedBills?.map((single) => {
+                            {loading ? <Loader /> : Array.isArray(sortedBills) && sortedBills?.map((single) => {
                                 return (
                                     <tr key={single?.billingID}>
                                         <th>{loading ? <Loader /> : single?.billingID}</th>
